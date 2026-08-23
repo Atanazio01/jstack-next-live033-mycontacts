@@ -1,7 +1,9 @@
+import { NextResponse } from "next/server";
+
 export async function GET(request: Request): Promise<Response> {
   const headers = new Headers(request.headers);
 
-  console.log(headers)
+  console.log(headers);
 
-  return new Response("Hello JStack")
+  return NextResponse.json({ message: "Hello JStack" });
 }
