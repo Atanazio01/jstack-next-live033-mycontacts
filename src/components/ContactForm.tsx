@@ -17,8 +17,9 @@ export function ContactForm({ contact, onSubmit }: IContactFormProps) {
   const [name, setName] = useState(contact?.name || "");
   const [email, setEmail] = useState(contact?.email || "");
 
-  function handleSubmit() {
-    onSubmit?.({ name: name, email: email });
+  function handleSubmit(event: React.SubmitEvent) {
+    event.preventDefault();
+    onSubmit?.({ name, email });
   }
 
   return (
