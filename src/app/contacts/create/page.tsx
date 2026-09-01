@@ -10,10 +10,13 @@ export default function CreateContactPage() {
     const response = await fetch('/api/contacts', {
       method: 'POST',
       body: JSON.stringify(formData),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     const body = await response.json();
-    console.log(body);
   }
+
   return (
     <>
       <header>
