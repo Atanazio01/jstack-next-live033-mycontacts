@@ -7,7 +7,7 @@ import Link from 'next/link';
 export default function CreateContactPage() {
 
   async function handleSubmit(formData: { name: string; email: string }) {
-    await fetch('/api/contacts?id=123&batatinha=abc', {
+    await fetch('/api/contacts', {
       method: 'POST',
       body: JSON.stringify(formData),
       headers: {
