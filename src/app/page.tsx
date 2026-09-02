@@ -1,29 +1,15 @@
 import { ThemeSwitcher } from '@/components/ThemeSwithcer';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { db } from '@/lib/db';
 import { Edit2Icon, PlusCircleIcon, Trash2Icon } from 'lucide-react';
 import Link from 'next/link';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../components/ui/alert-dialog';
 
-const contacts = [
-  {
-    id: String(Math.random()),
-    name: 'Contact',
-    email: 'contact@jstack.com.br',
-  },
-  {
-    id: String(Math.random()),
-    name: 'Contact',
-    email: 'contact@jstack.com.br',
-  },
-  {
-    id: String(Math.random()),
-    name: 'Contact',
-    email: 'contact@jstack.com.br',
-  },
-]
 
-export default function Home() {
+// RSC -> React Server Component
+export default async function Home() {
+  const contacts = await db.contact.findMany();
   return (
     <>
       <header className='flex items-center justify-between'>
