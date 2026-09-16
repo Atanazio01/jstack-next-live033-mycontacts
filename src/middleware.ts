@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const isSignedIn = false;
+const isSignedIn = true;
 
 export function middleware(request: NextRequest) {
   console.log('caiu no middleware');
