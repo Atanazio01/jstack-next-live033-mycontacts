@@ -3,13 +3,15 @@ import { db } from "@/lib/db";
 import { sleep } from "@/lib/utils";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
-
+  
 export default function CreateContactPage() {
-  async function submitAction(data: { name: string; email: string }) {
+  async function submitAction(formData: FormData) {
     "use server";
 
+    const data = Object.fromEntries(formData) as { name: string; email: string };
+
     await sleep(1000);
-    await db.contact.create({ data });
+    await db.contact.create({ data: { name: data.name, email: data.email } });
   }
 
   return (

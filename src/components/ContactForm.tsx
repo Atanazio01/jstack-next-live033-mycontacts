@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2Icon } from "lucide-react";
-import { useState } from "react";
+import { useActionState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -11,43 +11,30 @@ interface IContactFormProps {
     email: string;
     name: string;
   };
-  submitAction?: (formData: { name: string; email: string }) => Promise<void>;
+  submitAction?: (formData: FormData) => Promise<void>;
 }
 
 export function ContactForm({ contact, submitAction }: IContactFormProps) {
-  const [name, setName] = useState(contact?.name || "");
-  const [email, setEmail] = useState(contact?.email || "");
-  const [isLoading, setIsLoading] = useState(false);
-
-  async function handleSubmit(event: React.SubmitEvent) {
-    event.preventDefault();
-    setIsLoading(true);
-    await submitAction?.({ name, email });
-    setIsLoading(false);
-  }
+  const [, clientSubmitAction, isPending] = useActionState(
+    async (_previousData: unknown, formData: FormData) =>
+      submitAction?.(formData),
+    null,
+  );
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
+    <form className="space-y-4" action={clientSubmitAction}>
       <div className="space-y-1.5">
         <Label>Nome</Label>
-        <Input
-          name="name"
-          onChange={(event) => setName(event.target.value)}
-          value={name}
-        />
+        <Input name="name" defaultValue={contact?.name || ""} />
       </div>
 
       <div className="space-y-1.5">
         <Label>Email</Label>
-        <Input
-          name="email"
-          onChange={(event) => setEmail(event.target.value)}
-          value={email}
-        />
+        <Input name="email" defaultValue={contact?.email || ""} />
       </div>
 
-      <Button type="submit" disabled={isLoading}>
-        {isLoading && <Loader2Icon className="size-4 mr-1 animate-spin" />}
+      <Button type="submit" disabled={isPending}>
+        {isPending && <Loader2Icon className="size-4 mr-1 animate-spin" />}
         {contact ? "Salvar" : "Criar"}
       </Button>
     </form>
