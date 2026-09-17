@@ -1,17 +1,42 @@
 import { ContactForm } from "@/components/ContactForm";
 import { db } from "@/lib/db";
 import { sleep } from "@/lib/utils";
+import { ActionResponse } from "@/types/actionResponse";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
-  
+import { z } from "zod";
+
+const schema = z.object({
+  name: z.string().min(1, "Nome é obrigatório"),
+  email: z.email("Informe um email válido"),
+});
+
 export default function CreateContactPage() {
-  async function submitAction(formData: FormData) {
+  async function submitAction(formData: FormData): Promise<ActionResponse> {
     "use server";
 
-    const data = Object.fromEntries(formData) as { name: string; email: string };
+    const data = Object.fromEntries(formData);
+    const parsedData = schema.safeParse(data);
+
+    if (!parsedData.success) {
+      return {
+        status: "error",
+        body: {
+          message: parsedData.error.issues.map((issue) => issue.message).join(", "),
+        },
+      };
+    }
+
+    const { name, email } = parsedData.data;
 
     await sleep(1000);
-    await db.contact.create({ data: { name: data.name, email: data.email } });
+    const contact = await db.contact.create({
+      data: { name, email },
+    });
+    return {
+      status: "success",
+      body: { contact },
+    };
   }
 
   return (
